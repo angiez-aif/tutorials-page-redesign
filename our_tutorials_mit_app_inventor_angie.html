@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Tutorials! | MIT App Inventor</title>
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Poppins Font matching MIT App Inventor -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap"
+    rel="stylesheet"
+  />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              lime: '#A5CF47',
+              limeDark: '#567316',
+              magenta: '#93267C',
+              orange: '#F98D34',
+              orangeDark: '#9A4806',
+              teal: '#128BA8',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Custom utilities for smooth carousel, custom scrollbar, and accordion transitions */
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    /* Hide scrollbar for carousel track while keeping smooth scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Smooth accordion content reveal */
+    .accordion-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .accordion-item[data-open="true"] .accordion-body {
+      grid-template-rows: 1fr;
+    }
+    .accordion-inner {
+      overflow: hidden;
+    }
+    .accordion-item[data-open="true"] .accordion-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Custom checkbox accent matching #93267C */
+    .palette-checkbox {
+      accent-color: #93267C;
+    }
+
+    /* Subtle pulse highlight when jumping from a sequence item to a tutorial card */
+    @keyframes cardHighlight {
+      0% {
+        box-shadow: 0 0 0 0 rgba(147, 38, 124, 0.7);
+        border-color: #93267C;
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(147, 38, 124, 0);
+        border-color: #F98D34;
+      }
+      100% {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+        border-color: #e2e8f0;
+      }
+    }
+    .highlight-pulse {
+      animation: cardHighlight 1.8s ease-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-[#93267C] selection:text-white">
+
+  <!-- =====================================================================
+       HERO BANNER ("Our Tutorials!") - Starts directly at the top of the page
+       ===================================================================== -->
+  <section class="relative overflow-hidden bg-gradient-to-r from-[#93267C] via-[#7c226d] to-[#128BA8] text-white">
+    <!-- Subtle decorative geometric accents -->
+    <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#A5CF47]/20 blur-2xl pointer-events-none"></div>
+    <div class="absolute -bottom-20 left-10 w-72 h-72 rounded-full bg-[#F98D34]/20 blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 relative z-10 text-center">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+        Our Tutorials!
+      </h1>
+      <p class="mt-3 max-w-2xl mx-auto text-sm sm:text-base text-white/90 font-normal">
+        Build real mobile apps with blocks—from your very first 1-hour project to artificial intelligence, data science, and connected micro:bit hardware.
+      </p>
+      <!-- Four-color brand accent bar -->
+      <div class="mt-6 flex justify-center gap-2" aria-hidden="true">
+        <span class="h-1.5 w-10 rounded-full bg-[#A5CF47]"></span>
+        <span class="h-1.5 w-10 rounded-full bg-[#F98D34]"></span>
+        <span class="h-1.5 w-10 rounded-full bg-white"></span>
+        <span class="h-1.5 w-10 rounded-full bg-[#128BA8] border border-white/40"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MAIN CONTENT CONTAINER
+       ===================================================================== -->
+  <main id="main" class="flex-1">
+
+    <!-- ===================================================================
+         SECTION 1: FEATURED TRACKS CAROUSEL (No Section Title, 4 Cards)
+         =================================================================== -->
+    <section id="featured-carousel" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+      <div class="relative flex items-center">
+        <!-- Previous Arrow -->
+        <button
+          id="carousel-prev"
+          type="button"
+          aria-label="Previous tracks"
+          class="z-10 -mr-3 sm:-mr-4 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border-2 border-slate-200 text-slate-700 hover:border-[#93267C] hover:text-[#93267C] disabled:opacity-35 disabled:pointer-events-none shadow-md flex items-center justify-center shrink-0 transition-all"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <!-- Carousel Viewport -->
+        <div class="overflow-hidden w-full py-2">
+          <div id="carousel-track" class="flex transition-transform duration-300 ease-out">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Next Arrow -->
+        <button
+          id="carousel-next"
+          type="button"
+          aria-label="Next tracks"
+          class="z-10 -ml-3 sm:-ml-4 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border-2 border-slate-200 text-slate-700 hover:border-[#93267C] hover:text-[#93267C] disabled:opacity-35 disabled:pointer-events-none shadow-md flex items-center justify-center shrink-0 transition-all"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Pagination Dots -->
+      <div id="carousel-dots" role="tablist" aria-label="Carousel pagination" class="mt-4 flex justify-center items-center gap-2"></div>
+
+      <!-- Browse All Tutorials CTA Button -->
+      <div class="mt-6 flex justify-center">
+        <a
+          href="#tutorial-library"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#93267C] hover:bg-[#7b1f67] text-white font-bold text-sm sm:text-base shadow-sm hover:shadow transition-all"
+        >
+          <span>Browse all tutorials</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 2: LEARNING PATHWAYS (6 Interactive Accordions)
+         =================================================================== -->
+    <section id="teaching-sequences" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-[#128BA8] mb-1">Curated Pathways</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Learning Pathways</h2>
+        </div>
+        <p class="text-sm text-slate-500">
+          Select a sample classroom pathway to explore tutorial progressions.
+        </p>
+      </div>
+
+      <!-- Accordion Stack Container -->
+      <div id="sequences-accordion" class="space-y-4">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SECTION 3: TUTORIAL LIBRARY WITH COMPONENT PALETTE & LEVEL FILTERS
+         =================================================================== -->
+    <section id="tutorial-library" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+      <!-- Top Bar: Section Heading Left + Difficulty Level Filter Pills Top Right -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <span class="inline-block text-xs font-bold uppercase tracking-wider text-[#93267C] mb-1">Interactive Explorer</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Browse All Tutorials</h2>
+            <p class="text-sm text-slate-600 mt-1">
+              Filter by difficulty level or check App Inventor components on the left palette.
+            </p>
+          </div>
+
+          <!-- Top Right Corner: Difficulty Level Filters -->
+          <div class="flex flex-col sm:items-end gap-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Difficulty Level</span>
+            <div id="level-filters" class="flex flex-wrap gap-2" role="radiogroup" aria-label="Filter by difficulty level">
+              <button
+                type="button"
+                data-level="all"
+                aria-checked="true"
+                role="radio"
+                class="level-pill px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all bg-[#93267C] text-white border-[#93267C] shadow-sm"
+              >
+                All
+              </button>
+              <button
+                type="button"
+                data-level="beginner"
+                aria-checked="false"
+                role="radio"
+                class="level-pill px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all bg-white text-slate-700 border-slate-200 hover:border-[#A5CF47]"
+              >
+                Beginner
+              </button>
+              <button
+                type="button"
+                data-level="basic"
+                aria-checked="false"
+                role="radio"
+                class="level-pill px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all bg-white text-slate-700 border-slate-200 hover:border-[#128BA8]"
+              >
+                Basic
+              </button>
+              <button
+                type="button"
+                data-level="intermediate"
+                aria-checked="false"
+                role="radio"
+                class="level-pill px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all bg-white text-slate-700 border-slate-200 hover:border-[#F98D34]"
+              >
+                Intermediate
+              </button>
+              <button
+                type="button"
+                data-level="advanced"
+                aria-checked="false"
+                role="radio"
+                class="level-pill px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all bg-white text-slate-700 border-slate-200 hover:border-[#93267C]"
+              >
+                Advanced
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Split Layout: Left Component Palette Sidebar + Right Tutorial Cards Column -->
+      <div class="grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-6 items-start">
+
+        <!-- LEFT-HAND SIDEBAR: MIT App Inventor Component Palette -->
+        <aside class="w-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <!-- Palette Header -->
+          <div class="bg-[#128BA8] text-white px-5 py-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+              </svg>
+              <h3 class="font-bold text-base tracking-wide">Palette</h3>
+            </div>
+            <button
+              id="clear-palette-btn"
+              type="button"
+              class="text-xs font-semibold bg-white/20 hover:bg-white/30 text-white px-2.5 py-1 rounded-full transition-colors hidden"
+            >
+              Clear
+            </button>
+          </div>
+
+          <!-- Palette Drawers (Component Checkboxes) -->
+          <div id="palette-drawers" class="divide-y divide-slate-200 max-h-[720px] overflow-y-auto">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </aside>
+
+        <!-- RIGHT-HAND AREA: Top Status & Search Bar Side-by-Side with Palette + Tutorial Cards Grid -->
+        <div class="w-full min-w-0">
+          <!-- Status & Quick Search Toolbar aligned directly beside the top of the Component Palette -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-3 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <p id="library-status" class="text-sm font-medium text-slate-700" aria-live="polite">
+                Showing all <span class="font-bold text-[#93267C]">36</span> tutorials
+              </p>
+              <div id="active-chips" class="flex flex-wrap items-center gap-1.5"></div>
+            </div>
+
+            <!-- Quick Search Box -->
+            <div class="relative w-full sm:w-64 shrink-0">
+              <input
+                id="tutorial-search"
+                type="search"
+                placeholder="Search title or component..."
+                aria-label="Search tutorials by title or component"
+                class="w-full pl-9 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:bg-white focus:border-[#128BA8] focus:ring-2 focus:ring-[#128BA8]/20"
+              />
+              <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Cards Grid -->
+          <div id="tutorials-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Populated dynamically by JS -->
+          </div>
+
+          <!-- Empty State (hidden unless 0 matches) -->
+          <div id="library-empty" class="hidden bg-white rounded-2xl border-2 border-dashed border-slate-300 p-10 text-center">
+            <div class="w-12 h-12 rounded-full bg-[#F98D34]/15 text-[#F98D34] mx-auto flex items-center justify-center mb-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">No matching tutorials found</h3>
+            <p class="text-sm text-slate-600 mt-1 max-w-md mx-auto">
+              Try unchecking one or more components on the Palette, switching the difficulty level back to "All", or visiting
+              <a href="https://appinventor.mit.edu/explore/ai2/tutorials-archive" target="_blank" rel="noopener" class="text-[#128BA8] font-semibold underline">the Land of Broken Toys</a>.
+            </p>
+            <button
+              id="reset-empty-btn"
+              type="button"
+              class="mt-4 inline-flex items-center px-5 py-2.5 rounded-full text-sm font-semibold bg-[#93267C] text-white hover:bg-[#7b1f67] transition-colors"
+            >
+              Reset All Filters
+            </button>
+          </div>
+
+          <!-- Archive Notice -->
+          <div class="mt-8 bg-white/80 rounded-2xl border border-slate-200 p-4 text-center text-sm text-slate-600">
+            Looking for an older tutorial? Visit
+            <a href="https://appinventor.mit.edu/explore/ai2/tutorials-archive" target="_blank" rel="noopener" class="font-semibold text-[#128BA8] hover:underline">
+              the Land of Broken Toys
+            </a>, our archive of classic App Inventor tutorials.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       FOOTER (MIT App Inventor)
+       ===================================================================== -->
+  <footer class="bg-slate-900 text-slate-300 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <!-- Brand Column -->
+        <div class="lg:col-span-2">
+          <div class="flex items-center gap-2.5 text-white font-bold text-xl">
+            <span class="w-3 h-3 rounded-full bg-[#A5CF47]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#F98D34]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#93267C]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#128BA8]"></span>
+            <span class="ml-1">MIT App Inventor</span>
+          </div>
+          <p class="mt-3 text-sm text-slate-400 max-w-sm leading-relaxed">
+            Empowering learners and educators worldwide to build impactful mobile apps with visual blocks programming and responsible AI.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-3">
+            <a
+              href="https://giving.appinventor.mit.edu/button"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider bg-[#F98D34] text-white hover:bg-[#e37920] transition-colors"
+            >
+              Donate
+            </a>
+            <a
+              href="https://community.appinventor.mit.edu/"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold border border-slate-600 text-slate-200 hover:border-[#A5CF47] hover:text-[#A5CF47] transition-colors"
+            >
+              Ask the Community
+            </a>
+          </div>
+        </div>
+
+        <!-- Learn -->
+        <div>
+          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-3">Learn</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="https://appinventor.mit.edu/get-started" class="hover:text-[#A5CF47] transition-colors">Get Started</a></li>
+            <li><a href="#featured-carousel" class="hover:text-[#A5CF47] transition-colors">Tutorials</a></li>
+            <li><a href="https://www.youtube.com/@MITAppInventor" target="_blank" rel="noopener" class="hover:text-[#A5CF47] transition-colors">Video Tutorials</a></li>
+            <li><a href="https://appinventor.mit.edu/explore/teach" class="hover:text-[#A5CF47] transition-colors">For Teachers</a></li>
+          </ul>
+        </div>
+
+        <!-- Get Help -->
+        <div>
+          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-3">Get Help</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="https://appinventor.mit.edu/FAQ" class="hover:text-[#128BA8] transition-colors">FAQ</a></li>
+            <li><a href="https://appinventor.mit.edu/explore/content/system-requirements" class="hover:text-[#128BA8] transition-colors">System Requirements</a></li>
+            <li><a href="https://appinventor.mit.edu/ios_tips" class="hover:text-[#128BA8] transition-colors">iPhone &amp; iPad</a></li>
+            <li><a href="https://appinventor.mit.edu/ai2/ReleaseNotes" class="hover:text-[#128BA8] transition-colors">Release Notes</a></li>
+          </ul>
+        </div>
+
+        <!-- About -->
+        <div>
+          <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-3">About</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="https://appinventor.mit.edu/about-us" class="hover:text-[#F98D34] transition-colors">About App Inventor</a></li>
+            <li><a href="https://appinventor.mit.edu/who-we-are" class="hover:text-[#F98D34] transition-colors">Who We Are</a></li>
+            <li><a href="https://appinventor.mit.edu/explore/research" class="hover:text-[#F98D34] transition-colors">Research</a></li>
+            <li><a href="https://appinventor.mit.edu/about/termsofservice" class="hover:text-[#F98D34] transition-colors">Terms &amp; Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <p>
+          Licensed under a
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener" class="underline hover:text-white">
+            Creative Commons Attribution-ShareAlike 4.0 International License
+          </a>.
+        </p>
+        <p>© 2012–2026 Massachusetts Institute of Technology</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       APPLICATION DATA & INTERACTIVE JAVASCRIPT
+       ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* -------------------------------------------------------------------
+         1. FEATURED TRACKS CAROUSEL DATA (8 Cards)
+         ------------------------------------------------------------------- */
+      const FEATURED_TRACKS = [
+        {
+          title: 'Beginner',
+          url: 'https://appinventor.mit.edu/explore/hour-of-code',
+          accent: '#A5CF47',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'rocket',
+          description: 'Short, hands-on tutorials for complete beginners—each takes about an hour to build.',
+          tags: [
+            { label: 'Beginner', tone: 'neutral' },
+            { label: 'No extra hardware', tone: 'green' },
+          ],
+        },
+        {
+          title: 'Responsible AI for Every Classroom',
+          url: 'https://raise.mit.edu/',
+          accent: '#93267C',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'brain',
+          description:
+            'AI, data science, and coding curriculum aligned with the UNESCO AI Competency Framework for Students, promoting a holistic, student-centered approach to AI education.',
+          tags: [
+            { label: 'Beginner to Advanced', tone: 'purple' },
+            { label: 'Optional extra hardware', tone: 'orange' },
+            { label: 'Data Science', tone: 'teal' },
+          ],
+        },
+        {
+          title: 'AI with App Inventor',
+          url: 'https://appinventor.mit.edu/explore/ai-with-mit-app-inventor',
+          accent: '#128BA8',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'sparkles',
+          description:
+            'A series of AI tutorials exploring generative AI, machine learning, reinforcement learning, augmented reality, and the ethics of AI.',
+          tags: [
+            { label: 'Beginner to Advanced', tone: 'purple' },
+            { label: 'No extra hardware', tone: 'green' },
+          ],
+        },
+        {
+          title: 'Physical Computing with App Inventor',
+          url: 'https://appinventor.mit.edu/explore/ai2/ecobits',
+          accent: '#F98D34',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'chip',
+          description:
+            'Send messages, track environmental data, and build interactive hardware projects with micro:bits.',
+          tags: [
+            { label: 'Needs a micro:bit', tone: 'orange' },
+            { label: 'Science (NGSS)', tone: 'teal' },
+          ],
+        },
+        {
+          title: 'Data Science with App Inventor',
+          url: 'https://appinventor.mit.edu/explore/ai2/data_science_unit',
+          accent: '#128BA8',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'chart',
+          description:
+            'Turn survey responses and real-world datasets into interactive charts, evaluate patterns, and make predictions.',
+          tags: [
+            { label: 'Data Science', tone: 'teal' },
+            { label: 'Mathematics', tone: 'neutral' },
+          ],
+        },
+        {
+          title: 'Social Media Literacy with App Inventor',
+          url: 'https://appinventor.mit.edu/explore/app-building-guides',
+          accent: '#93267C',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'feed',
+          description:
+            'Apps and tutorials inspired by real-life social media and designed to build awareness of social media algorithms and feeds.',
+          tags: [], // Intentionally empty per user specification
+        },
+        {
+          title: 'Intermediate',
+          url: '#tutorial-library',
+          filterLevel: 'intermediate',
+          accent: '#F98D34',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'layers',
+          description:
+            'Once you are familiar with the App Inventor interface, build richer apps incorporating media, maps, sensors, and AI.',
+          tags: [
+            { label: 'Intermediate', tone: 'orange' },
+            { label: 'No extra hardware', tone: 'green' },
+            { label: 'AI', tone: 'purple' },
+            { label: 'Games', tone: 'teal' },
+          ],
+        },
+        {
+          title: 'Advanced',
+          url: '#tutorial-library',
+          filterLevel: 'advanced',
+          accent: '#93267C',
+          placeholderLabel: '4:3 Illustration Placeholder',
+          iconType: 'database',
+          description:
+            'Build complex, full-featured apps integrating advanced AI models and cloud databases.',
+          tags: [
+            { label: 'Advanced', tone: 'purple' },
+            { label: 'No extra hardware', tone: 'green' },
+            { label: 'AI', tone: 'teal' },
+            { label: 'Games', tone: 'orange' },
+          ],
+        },
+      ];
+
+      /* Helper SVG icon for wireframe image placeholder */
+      function getPlaceholderSVG(type, accent) {
+        const icons = {
+          rocket: `<path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />`,
+          brain: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />`,
+          sparkles: `<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />`,
+          chip: `<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" />`,
+          chart: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />`,
+          feed: `<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />`,
+          layers: `<path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />`,
+          database: `<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />`,
+        };
+        return `
+          <svg class="w-9 h-9" style="color: ${accent};" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+            ${icons[type] || icons.rocket}
+          </svg>
+        `;
+      }
+
+      /* Tag badge styling helper */
+      function getTagClasses(tone) {
+        switch (tone) {
+          case 'green':
+            return 'bg-[#A5CF47]/20 text-[#465e11] border border-[#A5CF47]/50 font-semibold';
+          case 'orange':
+            return 'bg-[#F98D34]/15 text-[#9a4806] border border-[#F98D34]/40 font-semibold';
+          case 'purple':
+            return 'bg-[#93267C]/10 text-[#93267C] border border-[#93267C]/30 font-semibold';
+          case 'teal':
+            return 'bg-[#128BA8]/12 text-[#0e6b82] border border-[#128BA8]/30 font-semibold';
+          default:
+            return 'bg-slate-100 text-slate-700 border border-slate-200 font-medium';
+        }
+      }
+
+      /* -------------------------------------------------------------------
+         CAROUSEL RENDERING & RESPONSIVE NAVIGATION
+         ------------------------------------------------------------------- */
+      const carouselTrack = document.getElementById('carousel-track');
+      const carouselDots = document.getElementById('carousel-dots');
+      const prevBtn = document.getElementById('carousel-prev');
+      const nextBtn = document.getElementById('carousel-next');
+
+      let currentIndex = 0;
+      let visibleCount = 4;
+
+      function computeVisibleCount() {
+        const w = window.innerWidth;
+        if (w >= 1200) return 4;
+        if (w >= 900) return 3;
+        if (w >= 640) return 2;
+        return 1;
+      }
+
+      function renderCarouselCards() {
+        carouselTrack.innerHTML = FEATURED_TRACKS.map((card, idx) => {
+          const tagsHTML =
+            card.tags && card.tags.length > 0
+              ? `<ul class="mt-auto pt-4 flex flex-wrap justify-center gap-1.5">
+                  ${card.tags
+                    .map(
+                      (t) =>
+                        `<li class="px-2.5 py-0.5 rounded-full text-xs ${getTagClasses(t.tone)}">${t.label}</li>`
+                    )
+                    .join('')}
+                </ul>`
+              : '<div class="mt-auto pt-2"></div>';
+
+          const linkAttr = card.filterLevel
+            ? `href="#tutorial-library" data-trigger-level="${card.filterLevel}"`
+            : `href="${card.url}" target="_blank" rel="noopener"`;
+
+          return `
+            <div class="carousel-slide shrink-0 px-2.5 box-border" data-index="${idx}">
+              <article class="h-full bg-white rounded-2xl border-2 border-slate-200 hover:border-[${card.accent}] shadow-sm hover:shadow-md transition-all flex flex-col p-5 text-center group" style="border-top: 5px solid ${card.accent};">
+                <!-- Linked Title -->
+                <h3 class="text-lg font-bold leading-snug mb-3 min-h-[3.25rem] flex items-center justify-center">
+                  <a ${linkAttr} class="text-slate-900 group-hover:text-[#93267C] underline decoration-2 decoration-transparent group-hover:decoration-[#93267C] underline-offset-4 transition-colors">
+                    ${card.title}
+                  </a>
+                </h3>
+
+                <!-- Visual Box Placeholder for Picture -->
+                <a ${linkAttr} tabindex="-1" aria-hidden="true" class="block w-full aspect-[4/3] rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/90 group-hover:bg-slate-100/80 transition-colors flex flex-col items-center justify-center p-4 relative overflow-hidden">
+                  <div class="w-14 h-14 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center mb-2">
+                    ${getPlaceholderSVG(card.iconType, card.accent)}
+                  </div>
+                  <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Image Placeholder</span>
+                  <span class="text-[10px] text-slate-400 mt-0.5">${card.title}</span>
+                </a>
+
+                <!-- Short Polished Description -->
+                <p class="mt-3.5 text-sm text-slate-600 leading-relaxed">
+                  ${card.description}
+                </p>
+
+                <!-- Tags -->
+                ${tagsHTML}
+              </article>
+            </div>
+          `;
+        }).join('');
+
+        // Bind filter triggers for Intermediate / Advanced cards
+        carouselTrack.querySelectorAll('[data-trigger-level]').forEach((el) => {
+          el.addEventListener('click', (e) => {
+            e.preventDefault();
+            const lvl = el.getAttribute('data-trigger-level');
+            setDifficultyLevel(lvl);
+            document.getElementById('tutorial-library').scrollIntoView({ behavior: 'smooth' });
+          });
+        });
+
+        updateCarouselLayout();
+      }
+
+      function updateCarouselLayout() {
+        visibleCount = computeVisibleCount();
+        const slides = carouselTrack.querySelectorAll('.carousel-slide');
+        const slideWidthPct = 100 / visibleCount;
+        slides.forEach((s) => {
+          s.style.width = `${slideWidthPct}%`;
+        });
+
+        const maxIndex = Math.max(0, FEATURED_TRACKS.length - visibleCount);
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+        const translatePct = currentIndex * slideWidthPct;
+        carouselTrack.style.transform = `translateX(-${translatePct}%)`;
+
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex >= maxIndex;
+
+        // Render pagination dots (one dot per valid start position)
+        const totalStops = maxIndex + 1;
+        carouselDots.innerHTML = Array.from({ length: totalStops })
+          .map((_, i) => {
+            const active = i === currentIndex;
+            return `
+              <button
+                type="button"
+                role="tab"
+                aria-selected="${active}"
+                aria-label="Go to slide group ${i + 1}"
+                data-dot="${i}"
+                class="h-2.5 rounded-full transition-all ${
+                  active ? 'w-8 bg-[#93267C]' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                }"
+              ></button>
+            `;
+          })
+          .join('');
+
+        carouselDots.querySelectorAll('[data-dot]').forEach((dot) => {
+          dot.addEventListener('click', () => {
+            currentIndex = Number(dot.getAttribute('data-dot'));
+            updateCarouselLayout();
+          });
+        });
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex -= 1;
+          updateCarouselLayout();
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        const maxIndex = Math.max(0, FEATURED_TRACKS.length - visibleCount);
+        if (currentIndex < maxIndex) {
+          currentIndex += 1;
+          updateCarouselLayout();
+        }
+      });
+
+      // Touch swipe support for carousel
+      let touchStartX = 0;
+      carouselTrack.addEventListener(
+        'touchstart',
+        (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        },
+        { passive: true }
+      );
+      carouselTrack.addEventListener(
+        'touchend',
+        (e) => {
+          const deltaX = e.changedTouches[0].screenX - touchStartX;
+          const maxIndex = Math.max(0, FEATURED_TRACKS.length - visibleCount);
+          if (deltaX < -45 && currentIndex < maxIndex) {
+            currentIndex += 1;
+            updateCarouselLayout();
+          } else if (deltaX > 45 && currentIndex > 0) {
+            currentIndex -= 1;
+            updateCarouselLayout();
+          }
+        },
+        { passive: true }
+      );
+
+      /* -------------------------------------------------------------------
+         2. SAMPLE TEACHING SEQUENCES DATA (6 Accordions)
+         ------------------------------------------------------------------- */
+      const TEACHING_SEQUENCES = [
+        {
+          id: 'hour-of-code',
+          title: 'Hour of Code',
+          subtitle: '4 quick-start hour-long workshops to get started',
+          accent: '#A5CF47',
+          defaultOpen: true,
+          type: 'tiles',
+          items: [
+            {
+              label: 'StoryGPT',
+              color: '#93267C',
+              targetTitle: 'StoryGPT',
+              url: 'https://appinventor.mit.edu/explore/hour-of-code',
+            },
+            {
+              label: 'Music Guessing Game',
+              color: '#128BA8',
+              targetTitle: 'Music Guessing Game',
+              url: 'https://appinventor.mit.edu/explore/hour-of-code',
+            },
+            {
+              label: 'Hello Codi',
+              color: '#A5CF47',
+              textDark: true,
+              targetTitle: 'Hello Codi!',
+              url: 'https://appinventor.mit.edu/explore/ai2/hello-codi',
+            },
+            {
+              label: 'JokeMaker',
+              color: '#F98D34',
+              targetTitle: 'JokeMaker',
+              url: 'https://appinventor.mit.edu/explore/hour-of-code',
+            },
+          ],
+        },
+        {
+          id: 'general',
+          title: 'General',
+          subtitle: '15-step comprehensive progression from fundamentals to AI and cloud apps',
+          accent: '#128BA8',
+          defaultOpen: false,
+          type: 'flow',
+          steps: [
+            { label: 'HelloCodi', targetTitle: 'Hello Codi!' },
+            { label: 'Password Purr', targetTitle: 'Password Purr Tutorial' },
+            { label: 'MyPiano', targetTitle: 'MyPiano' },
+            { label: 'BallBounce', targetTitle: 'BallBounce' },
+            { label: 'Digital Doodle', targetTitle: 'Digital Doodle' },
+            { label: 'FakeVoices', targetTitle: 'Fake Voices Tutorial' },
+            { label: 'GenAI: Historical Character Advisor App', targetTitle: 'GenAI: Historical Character Advisor App' },
+            { label: 'Translator', targetTitle: 'Translator' },
+            { label: 'MoleMash', targetTitle: 'Mole Mash' },
+            { label: 'Tour Guide', targetTitle: 'Tour Guide' },
+            { label: 'ToDoList', targetTitle: 'ToDoList' },
+            { label: 'Emergency App', targetTitle: 'Emergency App Tutorial' },
+            { label: 'VisionAid', targetTitle: 'VisionAid' },
+            { label: 'PICaboo', targetTitle: 'PICaboo' },
+            { label: 'Lunch Options', targetTitle: 'Lunch Options' },
+          ],
+          endingLink: {
+            label: 'Explore other intermediate and advanced apps',
+            filterLevel: 'intermediate',
+          },
+        },
+        {
+          id: 'ai-focused',
+          title: 'AI-Focused',
+          subtitle: 'Speech, generative AI, audio, and image classification pathway',
+          accent: '#93267C',
+          defaultOpen: false,
+          type: 'flow',
+          steps: [
+            { label: 'JokeMaker', targetTitle: 'JokeMaker' },
+            { label: 'FakeVoices', targetTitle: 'Fake Voices Tutorial' },
+            { label: 'DigitalDoodle with GenAI', targetTitle: 'DigitalDoodle with GenAI' },
+            { label: 'Music Guessing App', targetTitle: 'Music Guessing Game' },
+            { label: 'PICaboo and Image Classification', targetTitle: 'PICaboo' },
+          ],
+          endingLink: {
+            label: 'Explore other AI apps',
+            searchQuery: 'AI',
+          },
+        },
+        {
+          id: 'no-ai-coding',
+          title: 'No AI, Just Coding',
+          subtitle: 'Core event-driven programming, UI, media, canvas, and lists',
+          accent: '#A5CF47',
+          defaultOpen: false,
+          type: 'flow',
+          steps: [
+            { label: 'Hello Codi', targetTitle: 'Hello Codi!' },
+            { label: 'MyPiano', targetTitle: 'MyPiano' },
+            { label: 'BallBounce', targetTitle: 'BallBounce' },
+            { label: 'Digital Doodle', targetTitle: 'Digital Doodle' },
+            { label: 'Translator', targetTitle: 'Translator' },
+            { label: 'MoleMash', targetTitle: 'Mole Mash' },
+            { label: 'Tour Guide', targetTitle: 'Tour Guide' },
+            { label: 'ToDoList', targetTitle: 'ToDoList' },
+          ],
+        },
+        {
+          id: 'gaming-focused',
+          title: 'Gaming-focused',
+          subtitle: 'Sprites, physics, gestures, timers, and arcade mechanics',
+          accent: '#F98D34',
+          defaultOpen: false,
+          type: 'flow',
+          steps: [
+            { label: 'Password Purr', targetTitle: 'Password Purr Tutorial' },
+            { label: 'BallBounce', targetTitle: 'BallBounce' },
+            { label: 'MoleMash', targetTitle: 'Mole Mash' },
+            { label: 'MiniGolf', targetTitle: 'Mini Golf: Fling, TouchUp, TouchDown Gestures' },
+            { label: 'SpaceInvader', targetTitle: 'Space Invaders' },
+            { label: 'FindTheGold', targetTitle: 'Get the Gold' },
+          ],
+        },
+        {
+          id: 'express',
+          title: 'Express (To experience App Inventor and its advanced capabilities quickly)',
+          subtitle: 'Fast-paced 9-app tour covering speech, maps, vision AI, and cloud data',
+          accent: '#128BA8',
+          defaultOpen: false,
+          type: 'flow',
+          steps: [
+            { label: 'JokeMaker', targetTitle: 'JokeMaker' },
+            { label: 'Digital Doodle', targetTitle: 'Digital Doodle' },
+            { label: 'MoleMash', targetTitle: 'Mole Mash' },
+            { label: 'Tour Guide', targetTitle: 'Tour Guide' },
+            { label: 'ToDoList', targetTitle: 'ToDoList' },
+            { label: 'Emergency App', targetTitle: 'Emergency App Tutorial' },
+            { label: 'VisionAid', targetTitle: 'VisionAid' },
+            { label: 'PICaboo', targetTitle: 'PICaboo' },
+            { label: 'Lunch Options', targetTitle: 'Lunch Options' },
+          ],
+          endingLink: {
+            label: 'Explore intermediate and advanced apps',
+            filterLevel: 'intermediate',
+          },
+        },
+      ];
+
+      /* Render the 6 Accordions */
+      const accordionContainer = document.getElementById('sequences-accordion');
+
+      function renderSequences() {
+        accordionContainer.innerHTML = TEACHING_SEQUENCES.map((seq) => {
+          let bodyContent = '';
+
+          if (seq.type === 'tiles') {
+            // Hour of Code: 4 colored square/rectangular button tiles without descriptions
+            bodyContent = `
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                ${seq.items
+                  .map(
+                    (tile) => `
+                    <a
+                      href="#tutorial-library"
+                      data-jump-tutorial="${tile.targetTitle}"
+                      style="background-color: ${tile.color};"
+                      class="group rounded-2xl p-6 min-h-[116px] flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-4 focus:ring-slate-300 ${
+                        tile.textDark ? 'text-slate-900' : 'text-white'
+                      }"
+                    >
+                      <span class="text-lg sm:text-xl font-bold tracking-tight leading-snug">
+                        ${tile.label}
+                      </span>
+                    </a>
+                  `
+                  )
+                  .join('')}
+              </div>
+            `;
+          } else {
+            // Arrow-Connected Flow Layout (arrows strictly between steps, NEVER inside or after the final box)
+            const paletteCycle = ['#128BA8', '#93267C', '#F98D34', '#A5CF47'];
+            const stepBoxes = seq.steps
+              .map((step, i) => {
+                const badgeColor = paletteCycle[i % paletteCycle.length];
+                const isAbsoluteLastBox = i === seq.steps.length - 1 && !seq.endingLink;
+                return `
+                  <div class="flex items-center gap-2">
+                    <a
+                      href="#tutorial-library"
+                      data-jump-tutorial="${step.targetTitle}"
+                      class="flex-1 sm:flex-initial min-w-[155px] max-w-[235px] bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#93267C] rounded-xl px-3.5 py-2.5 shadow-xs hover:shadow transition-all flex items-center gap-2.5 group"
+                    >
+                      <span
+                        class="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center shrink-0 ${
+                          badgeColor === '#A5CF47' ? 'text-slate-900' : 'text-white'
+                        }"
+                        style="background-color: ${badgeColor};"
+                      >
+                        ${i + 1}
+                      </span>
+                      <span class="text-sm font-semibold text-slate-800 group-hover:text-[#93267C] leading-snug">
+                        ${step.label}
+                      </span>
+                    </a>
+
+                    ${
+                      !isAbsoluteLastBox
+                        ? `<span class="text-[#128BA8] shrink-0 flex items-center justify-center" aria-hidden="true">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                          </span>`
+                        : ''
+                    }
+                  </div>
+                `;
+              })
+              .join('');
+
+            const endingNode = seq.endingLink
+              ? `
+                <div class="flex items-center">
+                  <a
+                    href="#tutorial-library"
+                    ${
+                      seq.endingLink.filterLevel
+                        ? `data-seq-level="${seq.endingLink.filterLevel}"`
+                        : `data-seq-search="${seq.endingLink.searchQuery || ''}"`
+                    }
+                    class="inline-flex items-center px-4 py-2.5 rounded-xl bg-[#93267C] text-white text-sm font-semibold shadow-sm hover:bg-[#7b1f67] transition-colors"
+                  >
+                    <span>${seq.endingLink.label}</span>
+                  </a>
+                </div>
+              `
+              : '';
+
+            bodyContent = `
+              <div class="pt-2 flex flex-wrap items-center gap-y-3 gap-x-2">
+                ${stepBoxes}
+                ${endingNode}
+              </div>
+            `;
+          }
+
+          return `
+            <div
+              class="accordion-item bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-shadow hover:shadow-md"
+              data-open="${seq.defaultOpen ? 'true' : 'false'}"
+              style="border-left: 6px solid ${seq.accent};"
+            >
+              <button
+                type="button"
+                aria-expanded="${seq.defaultOpen ? 'true' : 'false'}"
+                class="accordion-trigger w-full px-5 sm:px-6 py-4 flex items-center justify-between gap-4 text-left hover:bg-slate-50/80 transition-colors focus:outline-none focus:bg-slate-50"
+              >
+                <div>
+                  <h3 class="text-base sm:text-lg font-bold text-slate-900">${seq.title}</h3>
+                  <p class="text-xs sm:text-sm text-slate-500 mt-0.5">${seq.subtitle}</p>
+                </div>
+                <span class="w-9 h-9 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                  <svg class="accordion-chevron w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </button>
+
+              <div class="accordion-body">
+                <div class="accordion-inner">
+                  <div class="px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 bg-slate-50/40">
+                    ${bodyContent}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Accordion toggle click handlers
+        accordionContainer.querySelectorAll('.accordion-trigger').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const item = btn.closest('.accordion-item');
+            const isOpen = item.getAttribute('data-open') === 'true';
+            item.setAttribute('data-open', isOpen ? 'false' : 'true');
+            btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+          });
+        });
+
+        // Sequence step links -> scroll to & highlight matching tutorial card in Library
+        accordionContainer.querySelectorAll('[data-jump-tutorial]').forEach((link) => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetTitle = link.getAttribute('data-jump-tutorial');
+            jumpToTutorialCard(targetTitle);
+          });
+        });
+
+        // Sequence ending links -> filter library
+        accordionContainer.querySelectorAll('[data-seq-level]').forEach((link) => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearAllFilters(false);
+            setDifficultyLevel(link.getAttribute('data-seq-level'));
+            document.getElementById('tutorial-library').scrollIntoView({ behavior: 'smooth' });
+          });
+        });
+
+        accordionContainer.querySelectorAll('[data-seq-search]').forEach((link) => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearAllFilters(false);
+            const q = link.getAttribute('data-seq-search');
+            searchInput.value = q;
+            state.search = q;
+            renderTutorialLibrary();
+            document.getElementById('tutorial-library').scrollIntoView({ behavior: 'smooth' });
+          });
+        });
+      }
+
+      /* -------------------------------------------------------------------
+         3. COMPONENT PALETTE & FULL TUTORIAL LIBRARY DATA (36 Tutorials)
+         ------------------------------------------------------------------- */
+      const PALETTE_CATEGORIES = [
+        {
+          name: 'User Interface',
+          open: true,
+          components: ['Button', 'Image', 'Label', 'ListPicker', 'ListView', 'PasswordTextBox', 'TextBox'],
+        },
+        {
+          name: 'Media',
+          open: true,
+          components: ['Camera', 'Player', 'Sound', 'SpeechRecognizer', 'TextToSpeech'],
+        },
+        {
+          name: 'Drawing and Animation',
+          open: true,
+          components: ['Ball', 'Canvas', 'ImageSprite'],
+        },
+        {
+          name: 'Maps',
+          open: false,
+          components: ['Map'],
+        },
+        {
+          name: 'Sensors',
+          open: false,
+          components: ['AccelerometerSensor', 'Clock', 'LocationSensor'],
+        },
+        {
+          name: 'Social',
+          open: false,
+          components: ['PhoneCall', 'PhoneNumberPicker', 'Sharing', 'Texting'],
+        },
+        {
+          name: 'Storage',
+          open: false,
+          components: ['CloudDB', 'TinyDB'],
+        },
+        {
+          name: 'Connectivity',
+          open: false,
+          components: ['ActivityStarter', 'Web'],
+        },
+        {
+          name: 'Artificial Intelligence',
+          open: true,
+          components: ['Any Component', 'ChatBot', 'ImageBot', 'LookExtension', 'PersonalImageClassifier', 'Translator'],
+        },
+      ];
+
+      const TUTORIALS_DATA = [
+        // --- 22 Original Tutorials from MIT App Inventor HTML ---
+        {
+          title: 'Hello Codi!',
+          level: 'beginner',
+          components: ['Button', 'Sound'],
+          url: 'https://appinventor.mit.edu/explore/ai2/hello-codi',
+        },
+        {
+          title: 'Password Purr Tutorial',
+          level: 'beginner',
+          components: ['PasswordTextBox', 'Sound'],
+          url: 'https://appinventor.mit.edu/explore/ai2/passwordpurr',
+        },
+        {
+          title: 'Fake Voices Tutorial',
+          level: 'beginner',
+          components: ['TextToSpeech', 'SpeechRecognizer'],
+          url: 'https://appinventor.mit.edu/explore/ai2/fake_voices',
+        },
+        {
+          title: 'Magic 8 Ball',
+          level: 'beginner',
+          components: ['Button', 'Player', 'AccelerometerSensor'],
+          url: 'https://appinventor.mit.edu/explore/ai2/magic-8-ball',
+        },
+        {
+          title: 'Mole Mash',
+          level: 'beginner',
+          components: ['ImageSprite', 'Canvas', 'Clock'],
+          url: 'https://appinventor.mit.edu/explore/ai2/molemash',
+        },
+        {
+          title: 'PaintPot (Part 1)',
+          level: 'beginner',
+          components: ['Canvas', 'Button'],
+          url: 'https://appinventor.mit.edu/explore/ai2/paintpot-part1',
+        },
+        {
+          title: 'PaintPot (Part 2)',
+          level: 'beginner',
+          components: ['Canvas'],
+          url: 'https://appinventor.mit.edu/explore/ai2/paintpot-part2',
+        },
+        {
+          title: 'PicCall',
+          level: 'beginner',
+          components: ['Button', 'PhoneCall', 'PhoneNumberPicker'],
+          url: 'https://appinventor.mit.edu/explore/ai2/piccall',
+        },
+        {
+          title: 'CloudDB Chat App',
+          level: 'intermediate',
+          components: ['CloudDB', 'ListView'],
+          url: 'https://appinventor.mit.edu/explore/ai2/clouddb-chat',
+        },
+        {
+          title: 'Emergency App Tutorial',
+          level: 'intermediate',
+          components: ['Player', 'Map', 'LocationSensor', 'SpeechRecognizer', 'Camera', 'Sharing'],
+          url: 'https://appinventor.mit.edu/explore/ai2/emergencyapp',
+        },
+        {
+          title: 'Get the Gold',
+          level: 'intermediate',
+          components: ['ImageSprite', 'Canvas', 'Clock'],
+          url: 'https://appinventor.mit.edu/explore/ai2/get-gold',
+        },
+        {
+          title: 'Mini Golf: Fling, TouchUp, TouchDown Gestures',
+          level: 'intermediate',
+          components: ['Ball', 'ImageSprite', 'Canvas'],
+          url: 'https://appinventor.mit.edu/explore/ai2/minigolf',
+        },
+        {
+          title: 'Mole Mash V2 with Sprite Layering',
+          level: 'intermediate',
+          components: ['ImageSprite', 'Canvas', 'Clock'],
+          url: 'https://appinventor.mit.edu/explore/ai2/molemash-2',
+        },
+        {
+          title: 'No Texting While Driving',
+          level: 'intermediate',
+          components: ['Texting', 'TextToSpeech'],
+          url: 'https://appinventor.mit.edu/explore/no-text-while-driving-ai2',
+        },
+        {
+          title: 'Paint Pot Extended with Camera',
+          level: 'intermediate',
+          components: ['Canvas', 'Camera'],
+          url: 'https://appinventor.mit.edu/explore/paint-pot-extended-camera',
+        },
+        {
+          title: 'QuizMe',
+          level: 'intermediate',
+          components: ['Button', 'Image', 'Label'],
+          url: 'https://appinventor.mit.edu/explore/ai2/quizme',
+        },
+        {
+          title: 'Snow Globe Tutorial',
+          level: 'intermediate',
+          components: ['Any Component', 'Canvas', 'AccelerometerSensor'],
+          url: 'https://appinventor.mit.edu/explore/ai2/snowglobe',
+        },
+        {
+          title: 'Space Invaders',
+          level: 'intermediate',
+          components: ['ImageSprite', 'Canvas', 'Clock'],
+          url: 'https://appinventor.mit.edu/explore/ai2/space-invaders',
+        },
+        {
+          title: 'State Geography Quiz with Map Component',
+          level: 'intermediate',
+          components: ['Map', 'ListPicker'],
+          url: 'https://appinventor.mit.edu/explore/ai2/state-geography-quiz',
+        },
+        {
+          title: 'Colored Dots',
+          level: 'advanced',
+          components: ['Canvas', 'TinyDB', 'ListPicker'],
+          url: 'https://appinventor.mit.edu/explore/ai2/colored-dots',
+        },
+        {
+          title: 'Exploring with the Location Sensor',
+          level: 'advanced',
+          components: ['LocationSensor', 'Label'],
+          url: 'https://appinventor.mit.edu/explore/ai2/location-sensor',
+        },
+        {
+          title: 'Where’s My Car?',
+          level: 'advanced',
+          components: ['ActivityStarter', 'LocationSensor', 'TinyDB'],
+          url: 'https://appinventor.mit.edu/explore/ai2/wheres-my-car',
+        },
+
+        // --- Additional Tutorials from Hour of Code & Teaching Sequences (including Basic level) ---
+        {
+          title: 'StoryGPT',
+          level: 'basic',
+          components: ['Button', 'Label', 'TextBox', 'ChatBot', 'TextToSpeech'],
+          url: 'https://appinventor.mit.edu/explore/hour-of-code',
+        },
+        {
+          title: 'Music Guessing Game',
+          level: 'basic',
+          components: ['Button', 'Player', 'Label'],
+          url: 'https://appinventor.mit.edu/explore/hour-of-code',
+        },
+        {
+          title: 'JokeMaker',
+          level: 'basic',
+          components: ['Button', 'Label', 'ChatBot', 'TextToSpeech'],
+          url: 'https://appinventor.mit.edu/explore/hour-of-code',
+        },
+        {
+          title: 'MyPiano',
+          level: 'basic',
+          components: ['Button', 'Sound'],
+          url: 'https://appinventor.mit.edu/explore/ai2/tutorials',
+        },
+        {
+          title: 'BallBounce',
+          level: 'basic',
+          components: ['Canvas', 'Ball'],
+          url: 'https://appinventor.mit.edu/explore/ai2/tutorials',
+        },
+        {
+          title: 'Digital Doodle',
+          level: 'basic',
+          components: ['Canvas', 'Button'],
+          url: 'https://appinventor.mit.edu/explore/ai2/tutorials',
+        },
+        {
+          title: 'DigitalDoodle with GenAI',
+          level: 'intermediate',
+          components: ['Canvas', 'Button', 'ImageBot'],
+          url: 'https://appinventor.mit.edu/explore/ai-with-mit-app-inventor',
+        },
+        {
+          title: 'GenAI: Historical Character Advisor App',
+          level: 'intermediate',
+          components: ['ChatBot', 'Button', 'Label', 'Image', 'TextBox'],
+          url: 'https://appinventor.mit.edu/explore/ai-with-mit-app-inventor',
+        },
+        {
+          title: 'Translator',
+          level: 'basic',
+          components: ['Button', 'Translator', 'SpeechRecognizer', 'TextToSpeech'],
+          url: 'https://appinventor.mit.edu/explore/app-building-guides',
+        },
+        {
+          title: 'Tour Guide',
+          level: 'intermediate',
+          components: ['Map', 'LocationSensor', 'ListPicker'],
+          url: 'https://appinventor.mit.edu/explore/ai2/tutorials',
+        },
+        {
+          title: 'ToDoList',
+          level: 'intermediate',
+          components: ['ListView', 'TinyDB', 'Button'],
+          url: 'https://appinventor.mit.edu/explore/ai2/tutorials',
+        },
+        {
+          title: 'VisionAid',
+          level: 'advanced',
+          components: ['Camera', 'LookExtension', 'PersonalImageClassifier', 'TextToSpeech'],
+          url: 'https://appinventor.mit.edu/explore/ai-with-mit-app-inventor',
+        },
+        {
+          title: 'PICaboo',
+          level: 'intermediate',
+          components: ['Camera', 'PersonalImageClassifier', 'Label'],
+          url: 'https://appinventor.mit.edu/explore/ai-with-mit-app-inventor',
+        },
+        {
+          title: 'Lunch Options',
+          level: 'advanced',
+          components: ['CloudDB', 'ListPicker', 'Button', 'Label', 'Web'],
+          url: 'https://appinventor.mit.edu/explore/ai2/tutorials',
+        },
+      ];
+
+      /* Filter State */
+      const state = {
+        level: 'all',
+        selectedComponents: new Set(),
+        search: '',
+      };
+
+      const paletteDrawersEl = document.getElementById('palette-drawers');
+      const tutorialsGridEl = document.getElementById('tutorials-grid');
+      const libraryStatusEl = document.getElementById('library-status');
+      const activeChipsEl = document.getElementById('active-chips');
+      const libraryEmptyEl = document.getElementById('library-empty');
+      const clearPaletteBtn = document.getElementById('clear-palette-btn');
+      const resetEmptyBtn = document.getElementById('reset-empty-btn');
+      const searchInput = document.getElementById('tutorial-search');
+
+      /* Count how many tutorials use a given component */
+      function getComponentCount(compName) {
+        return TUTORIALS_DATA.filter((t) => t.components.includes(compName)).length;
+      }
+
+      /* Render Left-Hand Component Palette */
+      function renderPalette() {
+        paletteDrawersEl.innerHTML = PALETTE_CATEGORIES.map((cat, idx) => {
+          const checkboxesHTML = cat.components
+            .map((comp) => {
+              const count = getComponentCount(comp);
+              const checked = state.selectedComponents.has(comp) ? 'checked' : '';
+              return `
+                <label class="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 cursor-pointer text-sm text-slate-700 select-none transition-colors">
+                  <span class="flex items-center gap-2.5 truncate">
+                    <input
+                      type="checkbox"
+                      value="${comp}"
+                      ${checked}
+                      class="palette-checkbox w-4 h-4 rounded border-slate-300 cursor-pointer"
+                    />
+                    <span class="truncate font-medium">${comp}</span>
+                  </span>
+                  <span class="text-xs text-slate-400 font-semibold">${count}</span>
+                </label>
+              `;
+            })
+            .join('');
+
+          return `
+            <details ${cat.open ? 'open' : ''} class="group">
+              <summary class="px-4 py-3 bg-slate-50/80 hover:bg-slate-100 cursor-pointer list-none flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-700 select-none">
+                <span>${cat.name}</span>
+                <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div class="p-2 space-y-0.5 bg-white">
+                ${checkboxesHTML}
+              </div>
+            </details>
+          `;
+        }).join('');
+
+        // Checkbox listeners
+        paletteDrawersEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          cb.addEventListener('change', () => {
+            if (cb.checked) {
+              state.selectedComponents.add(cb.value);
+            } else {
+              state.selectedComponents.delete(cb.value);
+            }
+            renderTutorialLibrary();
+          });
+        });
+      }
+
+      /* Difficulty Level Pill Styling & Selection */
+      function setDifficultyLevel(newLevel) {
+        state.level = newLevel;
+        document.querySelectorAll('.level-pill').forEach((btn) => {
+          const isMatch = btn.getAttribute('data-level') === newLevel;
+          btn.setAttribute('aria-checked', isMatch ? 'true' : 'false');
+          if (isMatch) {
+            btn.className =
+              'level-pill px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all bg-[#93267C] text-white border-[#93267C] shadow-sm';
+          } else {
+            btn.className =
+              'level-pill px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all bg-white text-slate-700 border-slate-200 hover:border-[#93267C]';
+          }
+        });
+        renderTutorialLibrary();
+      }
+
+      document.querySelectorAll('.level-pill').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          setDifficultyLevel(btn.getAttribute('data-level'));
+        });
+      });
+
+      /* Level Badge Colors using the 4 Brand Theme Colors */
+      function getLevelBadge(level) {
+        switch (level) {
+          case 'beginner':
+            return {
+              label: 'Beginner',
+              classes: 'bg-[#A5CF47]/25 text-[#435b10] border border-[#A5CF47]/60',
+              bar: '#A5CF47',
+            };
+          case 'basic':
+            return {
+              label: 'Basic',
+              classes: 'bg-[#128BA8]/15 text-[#0c6479] border border-[#128BA8]/40',
+              bar: '#128BA8',
+            };
+          case 'intermediate':
+            return {
+              label: 'Intermediate',
+              classes: 'bg-[#F98D34]/20 text-[#964504] border border-[#F98D34]/50',
+              bar: '#F98D34',
+            };
+          case 'advanced':
+            return {
+              label: 'Advanced',
+              classes: 'bg-[#93267C]/15 text-[#93267C] border border-[#93267C]/40',
+              bar: '#93267C',
+            };
+          default:
+            return {
+              label: level,
+              classes: 'bg-slate-100 text-slate-700 border border-slate-200',
+              bar: '#128BA8',
+            };
+        }
+      }
+
+      /* Render Filtered Tutorial Cards Grid */
+      function renderTutorialLibrary(highlightTitle = null) {
+        const query = state.search.trim().toLowerCase();
+        const checkedComps = Array.from(state.selectedComponents);
+
+        const filtered = TUTORIALS_DATA.filter((tut) => {
+          // 1. Level match
+          if (state.level !== 'all' && tut.level !== state.level) {
+            return false;
+          }
+          // 2. Checkbox match: if nothing is checked, display all; otherwise match checked components
+          if (checkedComps.length > 0) {
+            const matchesAnyChecked = checkedComps.some((comp) => tut.components.includes(comp));
+            if (!matchesAnyChecked) return false;
+          }
+          // 3. Text search match
+          if (query) {
+            const inTitle = tut.title.toLowerCase().includes(query);
+            const inComps = tut.components.some((c) => c.toLowerCase().includes(query));
+            if (!inTitle && !inComps) return false;
+          }
+          return true;
+        });
+
+        // Update Clear All button visibility
+        const hasActiveFilters =
+          state.level !== 'all' || checkedComps.length > 0 || query.length > 0;
+        clearPaletteBtn.classList.toggle('hidden', !hasActiveFilters);
+
+        // Update Status Count
+        if (!hasActiveFilters) {
+          libraryStatusEl.innerHTML = `Showing all <span class="font-bold text-[#93267C]">${filtered.length}</span> tutorials`;
+        } else {
+          libraryStatusEl.innerHTML = `Showing <span class="font-bold text-[#93267C]">${filtered.length}</span> of ${TUTORIALS_DATA.length} tutorials`;
+        }
+
+        // Render active filter chips
+        activeChipsEl.innerHTML = checkedComps
+          .map(
+            (comp) => `
+            <button
+              type="button"
+              data-remove-comp="${comp}"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#128BA8]/12 text-[#0e6b82] border border-[#128BA8]/30 hover:bg-[#128BA8]/20 transition-colors"
+            >
+              <span>${comp}</span>
+              <span aria-hidden="true">×</span>
+            </button>
+          `
+          )
+          .join('');
+
+        activeChipsEl.querySelectorAll('[data-remove-comp]').forEach((chip) => {
+          chip.addEventListener('click', () => {
+            const comp = chip.getAttribute('data-remove-comp');
+            state.selectedComponents.delete(comp);
+            syncCheckboxesFromState();
+            renderTutorialLibrary();
+          });
+        });
+
+        // Toggle empty state vs grid
+        if (filtered.length === 0) {
+          tutorialsGridEl.innerHTML = '';
+          libraryEmptyEl.classList.remove('hidden');
+          return;
+        }
+        libraryEmptyEl.classList.add('hidden');
+
+        tutorialsGridEl.innerHTML = filtered
+          .map((tut) => {
+            const badge = getLevelBadge(tut.level);
+            const isHighlighted =
+              highlightTitle && tut.title.toLowerCase() === highlightTitle.toLowerCase();
+
+            return `
+              <article
+                data-card-title="${tut.title}"
+                class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between p-5 ${
+                  isHighlighted ? 'highlight-pulse' : ''
+                }"
+                style="border-top: 4px solid ${badge.bar};"
+              >
+                <div>
+                  <div class="flex items-start justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${badge.classes}">
+                      ${badge.label}
+                    </span>
+                  </div>
+
+                  <h3 class="text-lg font-bold text-slate-900 leading-snug">
+                    <a href="${tut.url}" target="_blank" rel="noopener" class="hover:text-[#93267C] transition-colors">
+                      ${tut.title}
+                    </a>
+                  </h3>
+
+                  <div class="mt-3">
+                    <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                      Component(s)
+                    </span>
+                    <div class="flex flex-wrap gap-1.5">
+                      ${tut.components
+                        .map((comp) => {
+                          const isSelected = state.selectedComponents.has(comp);
+                          return `<span class="px-2 py-0.5 rounded-md text-xs font-medium ${
+                            isSelected
+                              ? 'bg-[#93267C] text-white'
+                              : 'bg-slate-100 text-slate-700 border border-slate-200/80'
+                          }">${comp}</span>`;
+                        })
+                        .join('')}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <a
+                    href="${tut.url}"
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-[#128BA8] hover:text-[#93267C] transition-colors group"
+                  >
+                    <span>Link to Tutorial</span>
+                    <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </a>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+      }
+
+      function syncCheckboxesFromState() {
+        paletteDrawersEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          cb.checked = state.selectedComponents.has(cb.value);
+        });
+      }
+
+      function clearAllFilters(shouldRender = true) {
+        state.selectedComponents.clear();
+        state.search = '';
+        searchInput.value = '';
+        syncCheckboxesFromState();
+        if (shouldRender) {
+          setDifficultyLevel('all');
+        }
+      }
+
+      /* Jump from a Sequence Box to the matching card in the Library */
+      function jumpToTutorialCard(targetTitle) {
+        clearAllFilters(false);
+        setDifficultyLevel('all');
+        renderTutorialLibrary(targetTitle);
+
+        const targetEl = tutorialsGridEl.querySelector(
+          `[data-card-title="${CSS.escape(targetTitle)}"]`
+        );
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          document.getElementById('tutorial-library').scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
+      /* Search input listener */
+      searchInput.addEventListener('input', (e) => {
+        state.search = e.target.value;
+        renderTutorialLibrary();
+      });
+
+      clearPaletteBtn.addEventListener('click', () => clearAllFilters(true));
+      resetEmptyBtn.addEventListener('click', () => clearAllFilters(true));
+
+      /* Initialize All Sections */
+      renderCarouselCards();
+      renderSequences();
+      renderPalette();
+      renderTutorialLibrary();
+
+      window.addEventListener('resize', updateCarouselLayout);
+    })();
+  </script>
+</body>
+</html>
